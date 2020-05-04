@@ -2,15 +2,14 @@
   <q-page class="flex flex-center">
     <q-form
       @submit="onSubmit"
-      @reset="onReset"
       class="q-gutter-md"
     >
       <q-input
         filled
+        name="name"
         v-model="name"
         label="Usuario"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Ingrese un usuario valido']"
+        clearable
       />
 
       <q-input v-model="password" label="Contrañesa" filled :type="isPwd ? 'password' : 'text'">
@@ -25,7 +24,6 @@
 
       <div>
         <q-btn label="Iniciar Sesión" type="submit" color="primary"/>
-        <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
       </div>
     </q-form>
   </q-page>
@@ -37,6 +35,22 @@ export default {
     return {
       password: '',
       isPwd: true
+    }
+  },
+  methods: {
+    onSubmit (evt) {
+      const formData = new FormData(evt.target)
+      const submitResult = []
+
+      for (const [name, value] of formData.entries()) {
+        submitResult.push({
+          name,
+          value
+        })
+      }
+
+      this.submitResult = submitResult
+      this.$router.push('/todo')
     }
   }
 
