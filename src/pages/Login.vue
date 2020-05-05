@@ -9,10 +9,13 @@
         name="name"
         v-model="name"
         label="Usuario"
-        clearable
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Ingrese usuario']"
       />
 
-      <q-input name="contraseña" v-model="password" label="Contrañesa" filled :type="isPwd ? 'password' : 'text'">
+      <q-input name="contraseña" v-model="password" label="Contrañesa" filled :type="isPwd ? 'password' : 'text'"
+      lazy-rules
+      :rules="[ val => val && val.length > 0 || 'Ingrese contraseña']">
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -35,26 +38,28 @@ export default {
     return {
       password: '',
       isPwd: true,
-      usrPass: 'asd',
-      usrName: 'ian'
+      name: ''
     }
   },
   methods: {
     onSubmit (evt) {
       const formData = new FormData(evt.target)
       const submitResult = []
-
+      // var usrName = 'Ian'
       for (const [name, value] of formData.entries()) {
-        console.log(name, value)
+        console.log('Tipo de dato: ', typeof name, name, ' Tipo de dato: ', typeof value, value)
         submitResult.push({
           value
         })
       }
-      console.log(submitResult[0], submitResult[1])
-      if (submitResult[0] !== '') {
+      console.log(submitResult)
+      submitResult.toString()
+      if (submitResult) {
+        console.log('Login succeeded')
         this.$router.push('/todo')
       } else {
-        console.log('Wrong input')
+        console.log('Login failed')
+        console.log(submitResult[0])
       }
     }
   }
