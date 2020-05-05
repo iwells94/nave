@@ -21,6 +21,17 @@
         </template>
       </q-input>
     </div>
+    <div class="row q-pa-sm bg-primary">
+    <q-input
+      v-model="newDescription"
+      filled
+      autogrow
+      class="col"
+      square
+      bg-color="white"
+      placeholder="Agregar descripción"
+      dense/>
+    </div>
     <q-list
     class="bg-white"
     separator
@@ -39,7 +50,8 @@
           color="teal" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>{{ task.title }}</q-item-label>
+          <q-item-label>{{ task.title }}<br>
+          {{ task.description }}</q-item-label>
         </q-item-section>
         <q-item-section
         v-if="task.done"
@@ -80,6 +92,7 @@ export default {
   data () {
     return {
       newTask: '',
+      newDescription: '',
       tasks: [
         // {
         //   title: 'Realizar Actividad',
@@ -111,6 +124,7 @@ export default {
     addTask () {
       this.tasks.push({
         title: this.newTask,
+        description: this.newDescription,
         done: false
       })
       this.newTask = ''
