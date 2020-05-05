@@ -12,7 +12,7 @@
         clearable
       />
 
-      <q-input v-model="password" label="Contrañesa" filled :type="isPwd ? 'password' : 'text'">
+      <q-input name="contraseña" v-model="password" label="Contrañesa" filled :type="isPwd ? 'password' : 'text'">
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -34,7 +34,9 @@ export default {
   data () {
     return {
       password: '',
-      isPwd: true
+      isPwd: true,
+      usrPass: 'asd',
+      usrName: 'ian'
     }
   },
   methods: {
@@ -43,14 +45,17 @@ export default {
       const submitResult = []
 
       for (const [name, value] of formData.entries()) {
+        console.log(name, value)
         submitResult.push({
-          name,
           value
         })
       }
-
-      this.submitResult = submitResult
-      this.$router.push('/todo')
+      console.log(submitResult[0], submitResult[1])
+      if (submitResult[0] !== '') {
+        this.$router.push('/todo')
+      } else {
+        console.log('Wrong input')
+      }
     }
   }
 
