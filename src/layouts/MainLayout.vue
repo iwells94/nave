@@ -96,7 +96,12 @@ export default {
   computed: {
     todaysDate () {
       const timeStamp = Date.now()
-      return date.formatDate(timeStamp, 'dddd D MMMM')
+      return date.formatDate(timeStamp, 'dddd D MMMM', {
+        days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        daysShort: ['Dom', 'Lun', 'Mar', 'Mier', 'Jue', 'Vier', 'Sab'],
+        months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthsShort: ['Ene', 'Feb', 'Marz', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
+      })
     }
   }
 }
