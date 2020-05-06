@@ -29,6 +29,7 @@
       :breakpoint="600"
     >
       <q-scroll-area style="height: calc(100% - 192px); margin-top: 192px; border-right: 1px solid #ddd">
+        <q-item-label header>Menú de navegación</q-item-label>
         <q-list padding>
           <q-item
             to="/todo"
