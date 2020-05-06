@@ -3,6 +3,7 @@
     <q-form
       @submit="onSubmit"
       class="q-gutter-md"
+      ref="loginForm"
     >
       <q-input
         filled
@@ -52,15 +53,27 @@ export default {
           value
         })
       }
+      this.$refs.loginForm.validate().then(success => {
+        if (success) {
+          this.$router.push('/todo')
+        } else {
+          console.log('Login failed')
+          // oh no, user has filled in
+          // at least one invalid value
+        }
+      })
+
+      // to reset validations:
+      this.$refs.myForm.resetValidation()
       console.log(submitResult)
-      submitResult.toString()
-      if (submitResult) {
-        console.log('Login succeeded')
-        this.$router.push('/todo')
-      } else {
-        console.log('Login failed')
-        console.log(submitResult[0])
-      }
+      // submitResult.toString()
+      // if (submitResult) {
+      //   console.log('Login succeeded')
+      //   this.$router.push('/todo')
+      // } else {
+      //   console.log('Login failed')
+      //   console.log(submitResult[0])
+      // }
     }
   }
 
