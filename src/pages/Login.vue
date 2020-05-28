@@ -14,9 +14,15 @@
         :rules="[ val => val && val.length > 0 || 'Ingrese usuario']"
       />
 
-      <q-input name="contraseña" v-model="password" label="Contrañesa" filled :type="isPwd ? 'password' : 'text'"
-      lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Ingrese contraseña']">
+      <q-input
+        name="contraseña"
+        v-model="password"
+        label="Contrañesa"
+        filled
+        :type="isPwd ? 'password' : 'text'"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Ingrese contraseña']"
+      >
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'visibility_off' : 'visibility'"
@@ -34,6 +40,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -48,33 +56,34 @@ export default {
       const submitResult = []
       // var usrName = 'Ian'
       for (const [name, value] of formData.entries()) {
-        console.log('Tipo de dato: ', typeof name, name, ' Tipo de dato: ', typeof value, value)
+        // console.log(' Tipo de dato: ', typeof value, value)
         submitResult.push({
-          value
+          typedata: name,
+          data: value
         })
       }
       this.$refs.loginForm.validate().then(success => {
         if (success) {
-          this.$router.push('/todo')
+          for (var i = 0; i < this.users.length; i++) {
+            if (this.users[i].username === submitResult[0].data && this.users[i].password === submitResult[1].data) {
+              this.$router.push('/todo')
+              this.setUser(submitResult[0])
+            }
+          }
         } else {
           console.log('Login failed')
           // oh no, user has filled in
           // at least one invalid value
         }
       })
-
       // to reset validations:
-      this.$refs.myForm.resetValidation()
-      console.log(submitResult)
-      // submitResult.toString()
-      // if (submitResult) {
-      //   console.log('Login succeeded')
-      //   this.$router.push('/todo')
-      // } else {
-      //   console.log('Login failed')
-      //   console.log(submitResult[0])
-      // }
-    }
+      // this.$refs.formData.resetValidation()
+      // console.log(submitResult)
+    },
+    ...mapActions('tasks', ['setUser'])
+  },
+  computed: {
+    ...mapState('tasks', ['users'])
   }
 
 }

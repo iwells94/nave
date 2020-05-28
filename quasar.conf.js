@@ -55,7 +55,14 @@ module.exports = function (/* ctx */) {
       directives: [],
 
       // Quasar plugins
-      plugins: ['Dialog','Notify','QInput']
+      plugins: [
+        'Dialog',
+        'Notify',
+        'QInput',
+        'QExpansionItem',
+        'LocalStorage',
+        'SessionStorage'
+      ]
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie

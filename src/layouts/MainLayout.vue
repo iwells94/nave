@@ -23,6 +23,7 @@
     </q-header>
 
     <q-drawer
+      v-if="this.$route.path !== '/'"
       v-model="leftDrawerOpen"
       show-if-above
       :width="250"
@@ -32,22 +33,27 @@
         <q-item-label header>Menú de navegación</q-item-label>
         <q-list padding>
           <q-item
-            to="/todo"
+            v-for="pag in paginas"
+            :key="pag.nombrePag"
+            :to="pag.to"
             exact
-            clickable v-ripple>
+            clickable
+            v-ripple>
             <q-item-section avatar>
-              <q-icon name="list" />
+              <q-icon :name="pag.icono" />
             </q-item-section>
 
             <q-item-section>
-              Tareas
+              {{ pag.nombrePag }}
             </q-item-section>
           </q-item>
 
           <q-item
-            to="/logout"
             exact
-            clickable v-ripple>
+            clickable
+            v-ripple
+            @click.stop="loginOutfn()">
+
             <q-item-section avatar>
               <q-icon name="logout" />
             </q-item-section>
@@ -56,6 +62,7 @@
               Cerrar Sesión
             </q-item-section>
           </q-item>
+
         </q-list>
       </q-scroll-area>
 
@@ -64,16 +71,14 @@
           <q-avatar size="56px" class="q-mb-sm">
             <img src="https://es.gravatar.com/userimage/185318615/6a2d96a9ee10239c83c371fc4006517f.jpg">
           </q-avatar>
-          <div class="text-weight-bold">Ian Wells</div>
+          <div class="text-weight-bold"></div>
           <div>@iwells94</div>
         </div>
       </q-img>
     </q-drawer>
 
     <q-page-container>
-      <keep-alive>
-        <router-view />
-      </keep-alive>
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
@@ -81,6 +86,7 @@
 <script>
 // import EssentialLink from 'components/EssentialLink'
 import { date } from 'quasar'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'MainLayout',
@@ -91,7 +97,24 @@ export default {
 
   data () {
     return {
-      leftDrawerOpen: false
+      leftDrawerOpen: false,
+      userPageName: '',
+      paginas: [
+        {
+          nombrePag: 'Tareas',
+          icono: 'list',
+          to: '/todo',
+          clickeado: ''
+        }
+      ]
+    }
+  },
+  methods: {
+    ...mapActions('tasks', ['logoutUser']),
+    loginOutfn () {
+      this.logoutUser().then(() => {
+        this.$router.push('/')
+      })
     }
   },
   computed: {
@@ -104,6 +127,7 @@ export default {
         monthsShort: ['Ene', 'Feb', 'Marz', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
       })
     }
+    // ...mapGetters('tasks', ['userInsta'])
   }
 }
 </script>
