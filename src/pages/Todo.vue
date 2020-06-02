@@ -89,7 +89,7 @@
 
 <script>
 import TodoList from 'components/Todo_list'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data () {
@@ -100,7 +100,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('tasks', ['tasks'])
+    ...mapGetters('tasks', ['tasks'])
   },
 
   components: {
@@ -125,16 +125,19 @@ export default {
         //   description: this.editor,
         //   done: false
         // })
-        console.log('Tarea a agregar: ', this.submitTask)
+        // console.log('Tarea a agregar: ', this.submitTask)
         this.addingTask(this.submitTask)
         this.newTask = ''
         this.editor = ''
       }
       console.log('addTask')
     },
-    ...mapActions('tasks', ['updateTask', 'deleteTask', 'addingTask'])
+    ...mapActions('tasks', ['updateTask', 'deleteTask', 'addingTask', 'loadCurrentUser', 'loadFromStorage'])
+  },
+  mounted () {
+    this.loadCurrentUser()
+    this.loadFromStorage()
   }
-  // Solucionar problema con updateTask
 }
 </script>
 

@@ -7,7 +7,8 @@ const state = {
       id: 'ID1',
       title: 'Lavar ropa',
       description: 'Debo lavar la ropa sucia oe',
-      done: false
+      done: false,
+      taskOwner: 'Ian'
     }
   ],
   currentUser: '',
@@ -36,36 +37,47 @@ const mutations = {
     // console.log('payload en updateTask mutation: ', payload)
     const task = state.tasks.find((task) => task.id === payload.id)
     task.done = payload.done
-    LocalStorage.set(payload.id, task)
+    LocalStorage.set('tareas', state.tasks)
   },
   deleteTask (state, id) {
     // console.log('eliminar id: ', id)
     const task = state.tasks.findIndex((task) => task.id === id)
     // console.log('ID a eliminar: ', task)
-    LocalStorage.remove(id)
     state.tasks.splice(task, 1)
+    LocalStorage.set('tareas', state.tasks)
   },
   addingTask (state, payload) {
     // console.log('payload(desde mutations): ', payload)
+    payload.taskOwner = state.currentUser
     state.tasks.push({
       id: payload.id,
       title: payload.title,
       description: payload.description,
       done: payload.done,
-      taskOwner: state.currentUser
+      taskOwner: payload.taskOwner
     })
-    payload.taskOwner = state.currentUser
-    console.log('payload(desde mutations): ', payload)
-    LocalStorage.set(payload.id, payload)
+    // console.log('payload(desde mutations): ', payload)
+    LocalStorage.set('tareas', state.tasks)
   },
   setUser (state, payload) {
     // console.log('setUser: ', payload.data)
+    const str = 'currentUser'
     state.currentUser = payload.data
-    LocalStorage.set(state.currentUser, state.currentUser)
+    LocalStorage.set(str, state.currentUser)
+    // console.log('Current User: ', LocalStorage.getItem(str))
   },
   logoutUser (state) {
-    LocalStorage.remove(state.currentUser)
+    const str = 'currentUser'
+    LocalStorage.remove(str)
     state.currentUser = ''
+  },
+  loadFromStorage (state, value) {
+    state.tasks = value
+    console.log('Tareas en tasks: ', state.tasks)
+  },
+  loadCurrentUser (state, value) {
+    state.currentUser = value
+    console.log('Tareas en tasks: ', state.currentUser)
   }
 }
 
@@ -92,27 +104,28 @@ const actions = {
   },
   setUser ({ commit }, userData) {
     commit('setUser', userData)
+  },
+  loadFromStorage ({ commit }) {
+    if (LocalStorage.has('currentUser')) {
+      if (LocalStorage.has('tareas')) {
+        commit('loadFromStorage', LocalStorage.getItem('tareas'))
+      }
+    }
+  },
+  loadCurrentUser ({ commit }) {
+    if (LocalStorage.has('currentUser')) {
+      commit('loadCurrentUser', LocalStorage.getItem('currentUser'))
+    }
   }
 }
 
 const getters = {
   // Aqui se crean los metodos que toman los datos del estado y usados por los componentes
   tasks: (state) => {
-    return state.tasks
-  },
-  userTasks: (state) => {
-    const tasks = []
-    Object.keys(state.tasks).forEach(function (key) {
-      const task = state.tasks[key]
-      if (state.currentUser === task.owner) {
-        tasks[key] = task
-      }
-    })
-    return tasks
+    return state.tasks.filter((task) => task.taskOwner === state.currentUser)
   },
   userInsta: (state) => {
-    const user = state.users.find((user) => user.username === state.currentUser)
-    return user
+    return state.users.find((user) => user.username === state.currentUser)
   }
 }
 
